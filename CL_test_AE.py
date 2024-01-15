@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
     first_run = 1
     sim_length = 40
-    sim_points = 60000
+    sim_points = 200
 
     cnt = 0
 
@@ -70,7 +70,7 @@ if __name__ == "__main__":
         ## Noise x (the function recieves a numpy array, a conversion from list to np.array has to be done and later reversed)
         x_np = np.array(x).reshape(1,4)
         # print(f'x_np = {x_np}')
-        x_noised = AE.noise_datapoint(x_np, multiplier_white=1, multiplier_SP=1)
+        x_noised = AE.noise_datapoint(x_np, multiplier_white=0.01, multiplier_SP=0.1)
         x_noised = x_noised[0].tolist()
         # print(f'noised x = {x_noised}')
         
@@ -84,10 +84,11 @@ if __name__ == "__main__":
         point = np.concatenate((plant.u, x_noised), axis=None).reshape(1,6)
         
         # Fit data to scaling scheme (a np.array and a reshape is needed)
-        # point_scaled = scaler.transform(np.array(point).reshape(-1,1))
+        # point_scaled = scaler.fit_transform(np.array(point).reshape(-1,1))
+        # print(f'point_scaled = {point_scaled}')
+
         point_scaled = scaler.transform(np.array(point))
 
-        # point_scaled = scaler.transform(np.array(point))
         point_scaled = np.concatenate(point_scaled, axis=None).reshape(1,6)
         
         ## Autoencoder
@@ -95,6 +96,7 @@ if __name__ == "__main__":
         # Convert back
         # Y_pred_list = scaler.inverse_transform(np.concatenate(AE.Y_pred_list, axis=0))
         Y_pred_unscaled = AE.Y_pred_list[-1]
+        print(f'Y_pred_unscaled = {Y_pred_unscaled}')
         Y_pred_list = scaler.inverse_transform(Y_pred_unscaled)
         # Y_pred_list = AE.Y_pred_list[-1]
         # print(f'Y_pred_list = {Y_pred_list}')
@@ -221,8 +223,8 @@ if __name__ == "__main__":
     plt.figure(num=7)
     for i in range(4):
         plt.subplot(2, 2, i+1)
-        plt.plot(x_pred_array[:, i], label=f'x_noisy')
-        plt.plot(x_noised_array[:, i], label=f'x_AE')
+        plt.plot(x_pred_array[:, i], label=f'x_AE')
+        plt.plot(x_noised_array[:, i], label=f'x_noisy')
         plt.plot(x_array[:, i], label=f'x_clean')
         plt.title(f"State x_{i}")
         plt.legend()
@@ -235,9 +237,9 @@ if __name__ == "__main__":
     if not os.path.exists('CL_AE_data/'):
         os.makedirs('CL_AE_data/')
 
-    torch.save(x_array, 'CL_AE_data/x_array.pkl')
-    torch.save(u_array, 'CL_AE_data/u_array.pkl')
-    torch.save(x_pred_array, 'CL_AE_data/x_pred_array.pkl')
-    torch.save(x_noised_array, 'CL_AE_data/x_noised_array.pkl')
-    torch.save(x_scaled_array, 'CL_AE_data/x_scaled_array.pkl')
-    print('Saving process completed')
+    # torch.save(x_array, 'CL_AE_data/x_array.pkl')
+    # torch.save(u_array, 'CL_AE_data/u_array.pkl')
+    # torch.save(x_pred_array, 'CL_AE_data/x_pred_array.pkl')
+    # torch.save(x_noised_array, 'CL_AE_data/x_noised_array.pkl')
+    # torch.save(x_scaled_array, 'CL_AE_data/x_scaled_array.pkl')
+    # print('Saving process completed')

@@ -31,7 +31,7 @@ if __name__ == "__main__":
     # Simulate the system with state feedback control
     run_sim = True
     while(run_sim):
-        x = plant.closed_loop()
+        x = plant.closed_loop(plant.x)
         # print(x)
 
         ## Print x

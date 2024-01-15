@@ -36,7 +36,8 @@ class fcn_QuadrupleTank():
         # self.K = np.zeros((2,4))    # Zero input check (open loop)
 
         # Closed-loop dynamics (A - BK)
-        self.CL_dyn = self.A - (self.B @ self.K)
+        self.CL_dyn = self.A - (self.B @ np.eye(2) * 10 @ self.K)
+        # self.CL_dyn = self.A - (self.B @ self.K)
 
         # Initial input (random)
         self.u = np.zeros((2,))
